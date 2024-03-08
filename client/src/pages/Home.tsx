@@ -23,7 +23,7 @@ const Home = () => {
 			<div>
 				{Object.keys(user).map(key => {
 					if (shownUserProperties.includes(key as keyof User)) {
-						const text = `${key}: $Object(user)[key] || "None"}`
+						const text = `${key}: ${Object(user)[key] || 'None'}`
 						return <p key={key}>{text}</p>
 					}
 				})}

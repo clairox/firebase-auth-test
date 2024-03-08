@@ -8,7 +8,7 @@ const Home = () => {
 	const navigate = useNavigate()
 	const [user, loading, error] = useAuthState(auth)
 
-	const shownUserProperties: (keyof User)[] = ['uid', 'displayName', 'email', 'emailVerified']
+	const shownUserProperties: (keyof User)[] = ['uid', 'email']
 
 	if (loading) {
 		return <div>Loading...</div>
@@ -21,6 +21,10 @@ const Home = () => {
 	if (user) {
 		return (
 			<div>
+				<h1>You are currently logged in!</h1>
+				<p>
+					<strong>Your user data is listed below.</strong>
+				</p>
 				{Object.keys(user).map(key => {
 					if (shownUserProperties.includes(key as keyof User)) {
 						const text = `${key}: ${Object(user)[key] || 'None'}`

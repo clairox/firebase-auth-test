@@ -6,7 +6,7 @@ type LoginFormProps = {
 	onSubmit: SubmitHandler<LoginFormSchemaType>
 }
 
-const LoginFormContent: FunctionComponent<LoginFormProps> = ({ onSubmit }) => {
+const Form: FunctionComponent<LoginFormProps> = ({ onSubmit }) => {
 	const { register, handleSubmit } = useFormContext<LoginFormSchemaType>()
 
 	return (
@@ -31,4 +31,4 @@ const LoginFormContent: FunctionComponent<LoginFormProps> = ({ onSubmit }) => {
 	)
 }
 
-export default LoginFormContent
+export default Form

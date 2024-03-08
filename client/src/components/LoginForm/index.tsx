@@ -6,9 +6,11 @@ import Form from './Form'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
 const LoginFormWrapper = () => {
 	const navigate = useNavigate()
+	const [loading, setLoading] = useState(false)
 
 	const formMethods = useForm<LoginFormSchemaType>({
 		resolver: zodResolver(LoginFormSchema),
@@ -19,6 +21,7 @@ const LoginFormWrapper = () => {
 	})
 
 	const onSubmit: SubmitHandler<LoginFormSchemaType> = async (data): Promise<void> => {
+		setLoading(true)
 		try {
 			const { email, password } = data
 
@@ -31,7 +34,7 @@ const LoginFormWrapper = () => {
 
 	return (
 		<FormProvider {...formMethods}>
-			<Form onSubmit={onSubmit} />
+			<Form onSubmit={onSubmit} loading={loading} />
 		</FormProvider>
 	)
 }

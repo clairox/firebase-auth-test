@@ -1,9 +1,11 @@
+import { auth } from '../lib/firebase'
 import Button from './Button'
 
 const LogoutButton = () => {
 	const logout = () => {
-		console.log('logging out')
+		auth.signOut()
 	}
+
 	return <Button onClick={logout}>Log Out</Button>
 }
 

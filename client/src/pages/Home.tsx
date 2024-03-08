@@ -10,32 +10,36 @@ const Home = () => {
 
 	const shownUserProperties: (keyof User)[] = ['uid', 'displayName', 'email', 'emailVerified']
 
+	if (loading) {
+		return <div>Loading...</div>
+	}
+
+	if (error) {
+		return <div>Something went wrong.</div>
+	}
+
+	if (user) {
+		return (
+			<div>
+				{Object.keys(user).map(key => {
+					if (shownUserProperties.includes(key as keyof User)) {
+						const text = `${key}: $Object(user)[key] || "None"}`
+						return <p key={key}>{text}</p>
+					}
+				})}
+				<LogoutButton />
+			</div>
+		)
+	}
+
 	return (
 		<div>
-			{(loading && <div>Loading...</div>) ||
-				(user ? (
-					<div>
-						{Object.keys(user).map(key => {
-							if (shownUserProperties.includes(key as keyof User)) {
-								return (
-									<p key={key}>
-										{key}: {Object(user)[key] || 'None'}
-									</p>
-								)
-							}
-						})}
-						<LogoutButton />
-					</div>
-				) : (
-					<div>
-						<h1>Welcome to Firebase Auth Test</h1>
-						<p>
-							Click the <strong>Sign Up</strong> button to create a new account or the <strong>Log In</strong> button to log into an existing one.
-						</p>
-						<SignupButton />
-						<LoginButton />
-					</div>
-				))}
+			<h1>Welcome to Firebase Auth Test</h1>
+			<p>
+				Click the <strong>Sign Up</strong> button to create a new account or the <strong>Log In</strong> button to log into an existing one.
+			</p>
+			<SignupButton />
+			<LoginButton />
 		</div>
 	)
 }

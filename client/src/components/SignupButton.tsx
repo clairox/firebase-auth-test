@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom'
 import Button from './Button'
 
 const SignupButton = () => {
+	const navigate = useNavigate()
 	const signup = () => {
-		console.log('signing up')
+		navigate('/signup')
 	}
 	return <Button onClick={signup}>Sign Up</Button>
 }

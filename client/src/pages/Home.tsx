@@ -1,11 +1,11 @@
-import LoginButton from '../components/LoginButton'
-import SignupButton from '../components/SignupButton'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../lib/firebase'
 import { User } from 'firebase/auth'
-import LogoutButton from '../components/LogoutButton'
+import { useNavigate } from 'react-router-dom'
+import Button from '../components/Button'
 
 const Home = () => {
+	const navigate = useNavigate()
 	const [user, loading, error] = useAuthState(auth)
 
 	const shownUserProperties: (keyof User)[] = ['uid', 'displayName', 'email', 'emailVerified']
@@ -27,7 +27,7 @@ const Home = () => {
 						return <p key={key}>{text}</p>
 					}
 				})}
-				<LogoutButton />
+				<Button onClick={() => auth.signOut()}>Log Out</Button>
 			</div>
 		)
 	}
@@ -38,8 +38,8 @@ const Home = () => {
 			<p>
 				Click the <strong>Sign Up</strong> button to create a new account or the <strong>Log In</strong> button to log into an existing one.
 			</p>
-			<SignupButton />
-			<LoginButton />
+			<Button onClick={() => navigate('/signup')}>Sign Up</Button>
+			<Button onClick={() => navigate('/login')}>Log In</Button>
 		</div>
 	)
 }

@@ -1,5 +1,5 @@
 import { InputProps, Input as Ipt } from '@chakra-ui/react'
-import { ComponentWithAsWithRef } from '../types/types'
+import { ComponentWithAsWithRef } from '../types'
 
 const Input: ComponentWithAsWithRef<'input', InputProps> = props => {
 	const { innerref, ...rest } = props

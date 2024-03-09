@@ -2,30 +2,14 @@ import { ButtonGroup, Center, Flex, FormControl, FormLabel, Heading, VStack } fr
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FunctionComponent, useState } from 'react'
 import { FieldValues, FormProvider, SubmitHandler, useForm, useFormContext } from 'react-hook-form'
-import { z } from 'zod'
 import Button from './Button'
 import Input from './Input'
-import { FormFieldType } from '../types'
 
-type FormField = {
-	name: string
-	labelText: string
-	type: FormFieldType
-	required?: boolean
-}
-
-type WrapperProps = {
-	heading: string
-	schema: z.AnyZodObject
-	fields: Array<FormField>
-	onSubmit: (data: FieldValues) => Promise<void>
-	defaultValues?: FieldValues
-}
-
-const FormWrapper: FunctionComponent<WrapperProps> = ({ heading, schema, fields, onSubmit, defaultValues }) => {
+const Form: FunctionComponent<FormProps> = ({ heading, schema, controls, onSubmit, defaultValues }) => {
 	const [loading, setLoading] = useState(false)
 
 	const formMethods = useForm<FieldValues>({
+		mode: 'onChange',
 		resolver: zodResolver(schema),
 		defaultValues,
 	})
@@ -37,22 +21,15 @@ const FormWrapper: FunctionComponent<WrapperProps> = ({ heading, schema, fields,
 
 	return (
 		<FormProvider {...formMethods}>
-			<Form onSubmit={onFormSubmit} loading={loading} heading={heading} fields={fields} />
+			<FormContent onSubmit={onFormSubmit} loading={loading} heading={heading} controls={controls} />
 		</FormProvider>
 	)
 }
 
-type FormProps = {
-	heading: string
-	fields: Array<FormField>
-	onSubmit: SubmitHandler<FieldValues>
-	loading: boolean
-}
-
-const Form: FunctionComponent<FormProps> = ({ heading, fields, onSubmit, loading }) => {
+const FormContent: FunctionComponent<FormContentProps> = ({ heading, controls, onSubmit, loading }) => {
 	const { register, handleSubmit } = useFormContext<FieldValues>()
 
-	const createFormControl = (fieldData: FormField): JSX.Element => {
+	const createFormControl = (fieldData: FormControl): JSX.Element => {
 		const { name, labelText, type, required } = fieldData
 		const { ref, ...reg } = register(name, { required })
 
@@ -75,7 +52,7 @@ const Form: FunctionComponent<FormProps> = ({ heading, fields, onSubmit, loading
 					{heading}
 				</Heading>
 				<VStack spacing="4" w="md">
-					{fields.map((field: FormField) => {
+					{controls.map((field: FormControl) => {
 						return createFormControl(field)
 					})}
 				</VStack>
@@ -89,4 +66,4 @@ const Form: FunctionComponent<FormProps> = ({ heading, fields, onSubmit, loading
 	)
 }
 
-export default FormWrapper
+export default Form

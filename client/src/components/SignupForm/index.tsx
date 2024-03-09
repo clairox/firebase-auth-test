@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { FieldValues } from 'react-hook-form'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
-import { FormFieldType } from '../../types'
 
 const SignupForm = () => {
 	const navigate = useNavigate()
@@ -20,20 +19,20 @@ const SignupForm = () => {
 		}
 	}
 
-	const formProps = {
+	const formProps: FormProps = {
 		heading: 'Sign Up',
 		schema: SignupFormSchema,
-		fields: [
+		controls: [
 			{
 				name: 'email',
 				labelText: 'Email *',
-				type: 'email' as FormFieldType,
+				type: 'email',
 				required: true,
 			},
 			{
 				name: 'password',
 				labelText: 'Password *',
-				type: 'password' as FormFieldType,
+				type: 'password',
 				required: true,
 			},
 		],

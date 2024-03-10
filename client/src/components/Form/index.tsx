@@ -4,7 +4,7 @@ import { FunctionComponent, useState } from 'react'
 import { FieldValues, FormProvider, SubmitHandler, useForm, useFormContext } from 'react-hook-form'
 import Button from '../Button'
 import TextInput from './inputs/TextInput'
-import { FormFieldProps, FormContentProps, FormField, FormProps } from '../../types/forms'
+import { FormFieldProps, FormContentProps, FormField, FormProps } from '../../types/form'
 
 const Form: FunctionComponent<FormProps> = ({
 	heading,

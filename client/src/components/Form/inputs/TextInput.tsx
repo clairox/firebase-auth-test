@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react'
 import Input from '../../Input'
 import BaseInput from './BaseInput'
-import { InputComponentProps } from '../../../types/forms'
+import { InputComponentProps } from '../../../types/form'
 
 const TextInput: FunctionComponent<InputComponentProps> = ({ fieldData, register, errors }) => {
 	return (

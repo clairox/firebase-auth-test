@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { FieldValues } from 'react-hook-form'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
-import { FormProps } from '../../types/forms'
+import { FormProps } from '../../types/form'
 
 const SignupForm = () => {
 	const navigate = useNavigate()

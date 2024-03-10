@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from '@chakra-ui/react'
 import { FunctionComponent, ReactElement } from 'react'
-import { InputComponentProps } from '../../../types/forms'
+import { InputComponentProps } from '../../../types/form'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Props = InputComponentProps & { children: (props: any) => ReactElement<any, any> | null }

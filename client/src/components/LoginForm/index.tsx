@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { FieldValues } from 'react-hook-form'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
-import { FormProps } from '../../types/forms'
+import { FormProps } from '../../types/form'
 import { useState } from 'react'
 
 const LoginForm = () => {

@@ -5,18 +5,23 @@ import { FieldValues } from 'react-hook-form'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
 import { FormProps } from '../../types/forms'
+import { useState } from 'react'
 
 const LoginForm = () => {
 	const navigate = useNavigate()
+	const [submissionErrorMessage, setSubmissionErrorMessage] = useState('')
 
 	const onSubmit = async (data: FieldValues): Promise<void> => {
+		setSubmissionErrorMessage('')
+
 		try {
 			const { email, password } = data
 			await signInWithEmailAndPassword(auth, email, password)
 
 			navigate('/', { replace: true })
 		} catch (err) {
-			console.error(err)
+			const message = 'Login unsuccessful. Please verify your email and password and try again.'
+			setSubmissionErrorMessage(message)
 		}
 	}
 
@@ -27,7 +32,7 @@ const LoginForm = () => {
 			{
 				name: 'email',
 				labelText: 'Email *',
-				type: 'email',
+				type: 'email', // validate as text field
 				required: true,
 				shouldValidate: false,
 			},
@@ -40,10 +45,9 @@ const LoginForm = () => {
 			},
 		],
 		onSubmit,
-		defaultValues: {
-			email: '',
-			password: '',
-		},
+		defaultValues: { email: '', password: '' },
+		validateOnChange: false,
+		submissionErrorMessage,
 	}
 	return <FormWrapper {...formProps} />
 }

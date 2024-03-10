@@ -1,7 +1,24 @@
-import { FieldErrors, FieldValues, SubmitHandler, UseFormRegister, UseFormTrigger } from 'react-hook-form'
+import {
+	FieldErrors,
+	FieldValues,
+	SubmitHandler,
+	UseFormRegister,
+	UseFormTrigger,
+} from 'react-hook-form'
 import { z } from 'zod'
 
-export type ControlType = 'checkbox' | 'text' | 'email' | 'password' | 'number' | 'pin' | 'radio' | 'range' | 'select' | 'switch' | 'textarea'
+export type ControlType =
+	| 'checkbox'
+	| 'text'
+	| 'email'
+	| 'password'
+	| 'number'
+	| 'pin'
+	| 'radio'
+	| 'range'
+	| 'select'
+	| 'switch'
+	| 'textarea'
 
 export type FormControl = {
 	name: string
@@ -17,11 +34,14 @@ export type FormProps = {
 	controls: Array<FormControl>
 	onSubmit: (data: FieldValues) => Promise<void>
 	defaultValues?: FieldValues
+	validateOnChange?: boolean
+	submissionErrorMessage?: string
 }
 
 export type FormContentProps = Omit<FormProps, 'schema' | 'onSubmit'> & {
 	onSubmit: SubmitHandler<FieldValues>
 	loading: boolean
+	submissionErrorMessage?: string
 }
 
 export type InputComponentProps = {

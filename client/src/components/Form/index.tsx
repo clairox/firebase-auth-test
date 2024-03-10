@@ -1,16 +1,15 @@
-import { ButtonGroup, Center, Flex, Heading, VStack } from '@chakra-ui/react'
+import { Box, ButtonGroup, Center, Flex, Heading, VStack } from '@chakra-ui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FunctionComponent, useState } from 'react'
 import { FieldValues, FormProvider, SubmitHandler, useForm, useFormContext } from 'react-hook-form'
 import Button from '../Button'
-import PasswordInput from './inputs/PasswordInput'
 import TextInput from './inputs/TextInput'
-import { FormControlProps, FormContentProps, FormControl, FormProps } from '../../types/forms'
+import { FormFieldProps, FormContentProps, FormField, FormProps } from '../../types/forms'
 
 const Form: FunctionComponent<FormProps> = ({
 	heading,
 	schema,
-	controls,
+	fields,
 	onSubmit,
 	defaultValues,
 	validateOnChange = true,
@@ -20,8 +19,8 @@ const Form: FunctionComponent<FormProps> = ({
 
 	const formMethods = useForm<FieldValues>({
 		mode: validateOnChange ? 'onChange' : 'onSubmit',
-		criteriaMode: 'all',
 		resolver: zodResolver(schema),
+		delayError: 750,
 		defaultValues,
 	})
 
@@ -36,7 +35,7 @@ const Form: FunctionComponent<FormProps> = ({
 				onSubmit={onFormSubmit}
 				loading={loading}
 				heading={heading}
-				controls={controls}
+				fields={fields}
 				submissionErrorMessage={submissionErrorMessage}
 			/>
 		</FormProvider>
@@ -45,7 +44,7 @@ const Form: FunctionComponent<FormProps> = ({
 
 const FormContent: FunctionComponent<FormContentProps> = ({
 	heading,
-	controls,
+	fields,
 	onSubmit,
 	loading,
 	submissionErrorMessage,
@@ -54,7 +53,6 @@ const FormContent: FunctionComponent<FormContentProps> = ({
 		register,
 		formState: { isValid, errors },
 		handleSubmit,
-		trigger,
 	} = useFormContext<FieldValues>()
 
 	return (
@@ -63,10 +61,10 @@ const FormContent: FunctionComponent<FormContentProps> = ({
 				<Heading size="2xl" mb="12">
 					{heading}
 				</Heading>
-				{submissionErrorMessage}
+				{submissionErrorMessage && <Box>{submissionErrorMessage}</Box>}
 				<VStack spacing="4" w="md">
-					{controls.map((control: FormControl) => (
-						<Control key={control.name} controlData={control} {...{ register, errors, trigger }} />
+					{fields.map((field: FormField) => (
+						<Field key={field.name} fieldData={field} {...{ register, errors }} />
 					))}
 				</VStack>
 				<ButtonGroup mt="8">
@@ -79,19 +77,11 @@ const FormContent: FunctionComponent<FormContentProps> = ({
 	)
 }
 
-const Control: FunctionComponent<FormControlProps> = ({
-	controlData,
-	register,
-	errors,
-	trigger,
-}) => {
-	const { type } = controlData
+const Field: FunctionComponent<FormFieldProps> = ({ fieldData, register, errors }) => {
+	const { type } = fieldData
 
-	if (type === 'text' || type === 'email') {
-		return <TextInput controlData={controlData} {...{ register, errors }} />
-	}
-	if (type === 'password') {
-		return <PasswordInput controlData={controlData} {...{ register, errors, trigger }} />
+	if (type === 'text' || type === 'email' || type === 'password') {
+		return <TextInput fieldData={fieldData} {...{ register, errors }} />
 	}
 
 	return <></>

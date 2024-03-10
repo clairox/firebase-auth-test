@@ -28,7 +28,7 @@ const LoginForm = () => {
 	const formProps: FormProps = {
 		heading: 'Log In',
 		schema: LoginFormSchema,
-		controls: [
+		fields: [
 			{
 				name: 'email',
 				labelText: 'Email *',

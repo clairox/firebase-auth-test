@@ -23,7 +23,7 @@ const SignupForm = () => {
 	const formProps: FormProps = {
 		heading: 'Sign Up',
 		schema: SignupFormSchema,
-		controls: [
+		fields: [
 			{
 				name: 'email',
 				labelText: 'Email *',
@@ -40,10 +40,7 @@ const SignupForm = () => {
 			},
 		],
 		onSubmit,
-		defaultValues: {
-			email: '',
-			password: '',
-		},
+		defaultValues: { email: '', password: '' },
 	}
 	return <FormWrapper {...formProps} />
 }

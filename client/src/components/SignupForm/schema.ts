@@ -25,39 +25,22 @@ const isEmailAvailable = async (email: string) => {
 	return !userWithEmailExists
 }
 
-const transformPasswordWithErrors = (password: string) => {
-	const errors = []
-	if (password.length < 8) {
-		errors.push('0')
-	}
-	if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
-		errors.push('1')
-	}
-	if (!/\d/.test(password)) {
-		errors.push('2')
-	}
-	if (!/[`!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?~ ]/.test(password)) {
-		errors.push('3')
-	}
-
-	return { password, errors }
-}
-
 const SignupFormSchema = z.object({
 	email: z
 		.string()
 		.email('Please enter a valid email address')
-		.min(1, { message: 'Email address is required' })
 		.max(128, { message: 'Email must not exceed 128 characters' })
 		.refine(isEmailAvailable, { message: 'Email address already in use' }),
 	password: z
 		.string()
-		.transform(transformPasswordWithErrors)
-		.refine(
-			value => value.errors.length === 0,
-			value => ({ message: value.errors.join('') })
-		)
-		.transform(value => value.password),
+		.min(8, { message: 'Password must be a minimum of 8 characters' })
+		.regex(new RegExp(/(?=.*[A-Z])(?=.*[a-z])/), {
+			message: 'Password must have lowercase and capital letters',
+		})
+		.regex(new RegExp(/[0-9]/), { message: 'Password must have at least 1 number' })
+		.regex(new RegExp(/[`!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?~ ]/), {
+			message: 'Password must have at least 1 special character',
+		}),
 })
 
 export default SignupFormSchema

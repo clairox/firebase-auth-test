@@ -1,13 +1,7 @@
-import {
-	FieldErrors,
-	FieldValues,
-	SubmitHandler,
-	UseFormRegister,
-	UseFormTrigger,
-} from 'react-hook-form'
+import { FieldErrors, FieldValues, SubmitHandler, UseFormRegister } from 'react-hook-form'
 import { z } from 'zod'
 
-export type ControlType =
+export type FieldType =
 	| 'checkbox'
 	| 'text'
 	| 'email'
@@ -20,10 +14,10 @@ export type ControlType =
 	| 'switch'
 	| 'textarea'
 
-export type FormControl = {
+export type FormField = {
 	name: string
 	labelText: string
-	type: ControlType
+	type: FieldType
 	required?: boolean
 	shouldValidate?: boolean
 }
@@ -31,7 +25,7 @@ export type FormControl = {
 export type FormProps = {
 	heading: string
 	schema: z.AnyZodObject
-	controls: Array<FormControl>
+	fields: Array<FormField>
 	onSubmit: (data: FieldValues) => Promise<void>
 	defaultValues?: FieldValues
 	validateOnChange?: boolean
@@ -45,16 +39,14 @@ export type FormContentProps = Omit<FormProps, 'schema' | 'onSubmit'> & {
 }
 
 export type InputComponentProps = {
-	controlData: FormControl
+	fieldData: FormField
 	register: UseFormRegister<FieldValues>
 	errors: FieldErrors<FieldValues>
-	trigger?: UseFormTrigger<FieldValues>
 	useDefaultErrorMessage?: boolean
 }
 
-export type FormControlProps = {
-	controlData: FormControl
+export type FormFieldProps = {
+	fieldData: FormField
 	register: UseFormRegister<FieldValues>
 	errors: FieldError<FieldValues>
-	trigger: UseFormTrigger<FieldValues>
 }

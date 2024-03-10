@@ -3,9 +3,9 @@ import Input from '../../Input'
 import BaseInput from './BaseInput'
 import { InputComponentProps } from '../../../types/forms'
 
-const TextInput: FunctionComponent<InputComponentProps> = ({ controlData, register, errors }) => {
+const TextInput: FunctionComponent<InputComponentProps> = ({ fieldData, register, errors }) => {
 	return (
-		<BaseInput controlData={controlData} register={register} errors={errors}>
+		<BaseInput fieldData={fieldData} register={register} errors={errors}>
 			{props => <Input {...props} />}
 		</BaseInput>
 	)

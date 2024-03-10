@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { FieldValues } from 'react-hook-form'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
+import { FormProps } from '../../types/forms'
 
 const LoginForm = () => {
 	const navigate = useNavigate()
@@ -28,18 +29,20 @@ const LoginForm = () => {
 				labelText: 'Email *',
 				type: 'email',
 				required: true,
+				shouldValidate: false,
 			},
 			{
 				name: 'password',
 				labelText: 'Password *',
 				type: 'password',
 				required: true,
+				shouldValidate: false,
 			},
 		],
 		onSubmit,
 		defaultValues: {
-			email: 'hakm.simmons@gmail.com',
-			password: 'testpassword',
+			email: '',
+			password: '',
 		},
 	}
 	return <FormWrapper {...formProps} />

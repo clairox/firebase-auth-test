@@ -22,11 +22,13 @@
 		"react-firebase-hooks": "^5.1.1",
 		"react-hook-form": "^7.51.0",
 		"react-router-dom": "^6.22.3",
+		"validator": "^13.11.0",
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {
 		"@types/react": "^18.2.56",
 		"@types/react-dom": "^18.2.19",
+		"@types/validator": "^13.11.9",
 		"@typescript-eslint/eslint-plugin": "^7.0.2",
 		"@typescript-eslint/parser": "^7.0.2",
 		"@vitejs/plugin-react": "^4.2.1",

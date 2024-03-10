@@ -1,63 +1,63 @@
-import axios, { AxiosError } from 'axios'
 import { z } from 'zod'
+import { isEmail, isLength } from 'validator'
+import axios, { AxiosError } from 'axios'
 
-const email = z
-	.string()
-	.email('Please enter a valid email address')
-	.min(1, { message: 'Email must not be empty' })
-	.max(128, { message: 'Email must not exceed 128 characters' })
-	.refine(
-		async email => {
-			const url = import.meta.env.VITE_SERVER_URL + '/user/exists'
-			const config = {
-				params: { email: email },
-			}
-			const userWithEmailExists = await axios
-				.get(url, config)
-				.then(response => {
-					return response.data.exists
-				})
-				.catch((err: AxiosError) => {
-					console.error(err)
-				})
+const isEmailAvailable = async (email: string) => {
+	const isValid = isEmail(email) && isLength(email, { max: 128 })
+	// Skip email avaliablity check if email is invalid
+	if (!isValid) {
+		return true
+	}
 
-			return !userWithEmailExists
-		},
-		{ message: 'Email address already in use' }
-	)
+	const url = import.meta.env.VITE_SERVER_URL + '/user/exists'
+	const config = {
+		params: { email: email },
+	}
+	const userWithEmailExists = await axios
+		.get(url, config)
+		.then(response => {
+			return response.data.exists
+		})
+		.catch((err: AxiosError) => {
+			console.error(err)
+		})
 
-const password = z
-	.string()
-	.transform(password => {
-		const errors = []
-		if (password.length < 8) {
-			errors.push('Password must be a minimum of 8 characters')
-		}
-		if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
-			errors.push('Must be a mix of lowercase and capital letters')
-		}
-		if (!/\d/.test(password)) {
-			errors.push('Must contain at least 1 number')
-		}
-		if (!/[`!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?~ ]/.test(password)) {
-			errors.push('Must contain at least 1 special character')
-		}
+	return !userWithEmailExists
+}
 
-		return { password, errors }
-	})
-	.refine(
-		value => value.errors.length === 0,
-		value => {
-			return { message: value.errors.join('|') }
-		}
-	)
-	.transform(value => {
-		return value.password
-	})
+const transformPasswordWithErrors = (password: string) => {
+	const errors = []
+	if (password.length < 8) {
+		errors.push('0')
+	}
+	if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
+		errors.push('1')
+	}
+	if (!/\d/.test(password)) {
+		errors.push('2')
+	}
+	if (!/[`!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?~ ]/.test(password)) {
+		errors.push('3')
+	}
+
+	return { password, errors }
+}
 
 const SignupFormSchema = z.object({
-	email,
-	password,
+	email: z
+		.string()
+		.email('Please enter a valid email address')
+		.min(1, { message: 'Email address is required' })
+		.max(128, { message: 'Email must not exceed 128 characters' })
+		.refine(isEmailAvailable, { message: 'Email address already in use' }),
+	password: z
+		.string()
+		.transform(transformPasswordWithErrors)
+		.refine(
+			value => value.errors.length === 0,
+			value => ({ message: value.errors.join('') })
+		)
+		.transform(value => value.password),
 })
 
 export default SignupFormSchema

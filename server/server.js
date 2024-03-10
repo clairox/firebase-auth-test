@@ -21,12 +21,27 @@ app.get('/authorized', function (req, res) {
 	getAuth(firebaseApp)
 		.verifyIdToken(req.headers.authorization)
 		.then(() => {
-			res.json({ message: 'Authorized!' })
+			return res.json({ message: 'Authorized!' })
 		})
 		.catch(err => {
 			if (err.code === 'app/invalid-credential') {
-				res.status(401).json(err)
+				return res.status(401).json(err)
 			}
+		})
+})
+
+app.get('/user/exists', function (req, res) {
+	getAuth(firebaseApp)
+		.getUserByEmail(req.query.email)
+		.then(() => {
+			res.json({ exists: true })
+		})
+		.catch(err => {
+			if (err.code === 'auth/user-not-found') {
+				return res.status(200).json({ exists: false })
+			}
+
+			return res.status(500).json(err)
 		})
 })
 

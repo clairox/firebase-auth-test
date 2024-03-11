@@ -1,5 +1,8 @@
+import { ReactNode } from 'react'
 import { FieldErrors, FieldValues, SubmitHandler, UseFormRegister } from 'react-hook-form'
 import { z } from 'zod'
+
+export type AuthMode = 'login' | 'signup'
 
 export type FieldType =
 	| 'checkbox'
@@ -16,8 +19,9 @@ export type FieldType =
 
 export type FormField = {
 	name: string
-	labelText: string
 	type: FieldType
+	labelText?: string
+	placeholder?: string
 	required?: boolean
 	shouldValidate?: boolean
 }
@@ -28,13 +32,14 @@ export type FormProps = {
 	fields: Array<FormField>
 	onSubmit: (data: FieldValues) => Promise<void>
 	defaultValues?: FieldValues
+	additionalContent?: ReactNode
 	validateOnChange?: boolean
 	submissionErrorMessage?: string
 }
 
 export type FormContentProps = Omit<FormProps, 'schema' | 'onSubmit'> & {
 	onSubmit: SubmitHandler<FieldValues>
-	loading: boolean
+	additionalContent?: ReactNode
 	submissionErrorMessage?: string
 }
 

@@ -1,6 +1,6 @@
 import { Box, ButtonGroup, Center, Flex, Heading, VStack } from '@chakra-ui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent } from 'react'
 import { FieldValues, FormProvider, SubmitHandler, useForm, useFormContext } from 'react-hook-form'
 import Button from '../Button'
 import TextInput from './inputs/TextInput'
@@ -12,11 +12,10 @@ const Form: FunctionComponent<FormProps> = ({
 	fields,
 	onSubmit,
 	defaultValues,
+	additionalContent,
 	validateOnChange = true,
 	submissionErrorMessage,
 }) => {
-	const [loading, setLoading] = useState(false)
-
 	const formMethods = useForm<FieldValues>({
 		mode: validateOnChange ? 'onChange' : 'onSubmit',
 		resolver: zodResolver(schema),
@@ -25,17 +24,16 @@ const Form: FunctionComponent<FormProps> = ({
 	})
 
 	const onFormSubmit: SubmitHandler<FieldValues> = data => {
-		setLoading(true)
-		onSubmit(data).then(() => setLoading(false))
+		onSubmit(data)
 	}
 
 	return (
 		<FormProvider {...formMethods}>
 			<FormContent
 				onSubmit={onFormSubmit}
-				loading={loading}
 				heading={heading}
 				fields={fields}
+				additionalContent={additionalContent}
 				submissionErrorMessage={submissionErrorMessage}
 			/>
 		</FormProvider>
@@ -46,32 +44,38 @@ const FormContent: FunctionComponent<FormContentProps> = ({
 	heading,
 	fields,
 	onSubmit,
-	loading,
+	additionalContent,
 	submissionErrorMessage,
 }) => {
 	const {
 		register,
-		formState: { isValid, errors },
+		formState: { isValid, errors, isSubmitting },
 		handleSubmit,
 	} = useFormContext<FieldValues>()
 
 	return (
 		<Center as="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-			<Flex direction="column" alignItems="center">
-				<Heading size="2xl" mb="12">
+			<Flex direction="column" alignItems="left" w="full" h="full">
+				<Heading size="xl" mb="8" w="full">
 					{heading}
 				</Heading>
 				{submissionErrorMessage && <Box>{submissionErrorMessage}</Box>}
-				<VStack spacing="4" w="md">
+				<VStack spacing="6" w="sm">
 					{fields.map((field: FormField) => (
 						<Field key={field.name} fieldData={field} {...{ register, errors }} />
 					))}
 				</VStack>
-				<ButtonGroup mt="8">
-					<Button type="submit" isDisabled={!isValid} isLoading={loading} loadingText="Submitting">
+				<ButtonGroup mt="6">
+					<Button
+						type="submit"
+						isDisabled={!isValid}
+						isLoading={isSubmitting}
+						loadingText="Submitting"
+					>
 						Submit
 					</Button>
 				</ButtonGroup>
+				{additionalContent && <Box mt="5">{additionalContent}</Box>}
 			</Flex>
 		</Center>
 	)

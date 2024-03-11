@@ -1,11 +1,13 @@
 import { Box } from '@chakra-ui/react'
-import { Outlet } from 'react-router-dom'
+import { FunctionComponent } from 'react'
 
-const Layout = () => {
+type Props = { children: JSX.Element }
+
+const Layout: FunctionComponent<Props> = ({ children }) => {
 	return (
 		<Box minH="100vh" bg="blue.700" color="white">
-			<Box as="main" pt={['10', '14', '20']} px="5">
-				<Outlet />
+			<Box as="main" pt={['12', '16', '24']} px="5">
+				{children}
 			</Box>
 		</Box>
 	)

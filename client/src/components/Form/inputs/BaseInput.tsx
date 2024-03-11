@@ -12,18 +12,19 @@ const BaseInput: FunctionComponent<Props> = ({
 	children,
 	useDefaultErrorMessage = true,
 }) => {
-	const { name, labelText, type } = fieldData
+	const { name, labelText, placeholder, type } = fieldData
 	const { ref, ...reg } = register(name, {})
 	const error = errors[name]
 
 	return (
 		<FormControl>
-			<FormLabel htmlFor={name + 'Input'}>{labelText}</FormLabel>
+			{labelText && <FormLabel htmlFor={name + 'Input'}>{labelText}</FormLabel>}
 			{children({
 				innerref: ref,
 				...reg,
 				type,
 				id: name,
+				placeholder,
 				'aria-required': true,
 			})}
 			{useDefaultErrorMessage && error && fieldData.shouldValidate && (

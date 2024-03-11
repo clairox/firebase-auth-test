@@ -1,14 +1,15 @@
 import FormWrapper from '../Form'
 import LoginFormSchema from './schema'
-import { useNavigate } from 'react-router-dom'
 import { FieldValues } from 'react-hook-form'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
-import { FormProps } from '../../types/form'
-import { useState } from 'react'
+import { AuthMode, FormProps } from '../../types/form'
+import { FunctionComponent, useState } from 'react'
+import { Link, Text } from '@chakra-ui/react'
 
-const LoginForm = () => {
-	const navigate = useNavigate()
+type Props = { setAuthMode: (mode: AuthMode) => void }
+
+const LoginForm: FunctionComponent<Props> = ({ setAuthMode }) => {
 	const [submissionErrorMessage, setSubmissionErrorMessage] = useState('')
 
 	const onSubmit = async (data: FieldValues): Promise<void> => {
@@ -16,9 +17,7 @@ const LoginForm = () => {
 
 		try {
 			const { email, password } = data
-			await signInWithEmailAndPassword(auth, email, password)
-
-			navigate('/', { replace: true })
+			signInWithEmailAndPassword(auth, email, password)
 		} catch (err) {
 			const message = 'Login unsuccessful. Please verify your email and password and try again.'
 			setSubmissionErrorMessage(message)
@@ -31,21 +30,26 @@ const LoginForm = () => {
 		fields: [
 			{
 				name: 'email',
-				labelText: 'Email *',
 				type: 'email', // validate as text field
+				placeholder: 'Email',
 				required: true,
 				shouldValidate: false,
 			},
 			{
 				name: 'password',
-				labelText: 'Password *',
 				type: 'password',
+				placeholder: 'Password',
 				required: true,
 				shouldValidate: false,
 			},
 		],
 		onSubmit,
 		defaultValues: { email: '', password: '' },
+		additionalContent: (
+			<Text>
+				Don't have an account? <Link onClick={() => setAuthMode('signup')}>Sign up</Link>.
+			</Text>
+		),
 		validateOnChange: false,
 		submissionErrorMessage,
 	}

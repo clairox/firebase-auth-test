@@ -1,20 +1,19 @@
 import FormWrapper from '../Form'
 import SignupFormSchema from './schema'
-import { useNavigate } from 'react-router-dom'
 import { FieldValues } from 'react-hook-form'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
-import { FormProps } from '../../types/form'
+import { AuthMode, FormProps } from '../../types/form'
+import { Link, Text } from '@chakra-ui/react'
+import { FunctionComponent } from 'react'
 
-const SignupForm = () => {
-	const navigate = useNavigate()
+type Props = { setAuthMode: (mode: AuthMode) => void }
 
+const SignupForm: FunctionComponent<Props> = ({ setAuthMode }) => {
 	const onSubmit = async (data: FieldValues): Promise<void> => {
 		try {
 			const { email, password } = data
-			await createUserWithEmailAndPassword(auth, email, password)
-
-			navigate('/', { replace: true })
+			createUserWithEmailAndPassword(auth, email, password)
 		} catch (err) {
 			console.error(err)
 		}
@@ -26,21 +25,26 @@ const SignupForm = () => {
 		fields: [
 			{
 				name: 'email',
-				labelText: 'Email *',
 				type: 'email',
+				placeholder: 'Email',
 				required: true,
 				shouldValidate: true,
 			},
 			{
 				name: 'password',
-				labelText: 'Password *',
 				type: 'password',
+				placeholder: 'Password',
 				required: true,
 				shouldValidate: true,
 			},
 		],
 		onSubmit,
 		defaultValues: { email: '', password: '' },
+		additionalContent: (
+			<Text>
+				Already have an account? <Link onClick={() => setAuthMode('login')}>Log in</Link>.
+			</Text>
+		),
 	}
 	return <FormWrapper {...formProps} />
 }
